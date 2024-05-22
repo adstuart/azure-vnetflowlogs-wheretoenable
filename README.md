@@ -134,5 +134,5 @@ It is worth acknowledging that this approach is the required approach if using V
 
 _I would recommend this approach only if you want a very light weight deployment, where you log for example traffic on centralised firewall/NVA NICs to get a low resolution view of your topology, where most data has to be aggregated based on source and destination IP data only. Also be aware that this approach, if not using a centralised firewall, and relying only on centralised gateways instead, will result in only see half (the inbound path) of ExpressRoute traffic flows._
 
-
+-
 
