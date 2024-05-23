@@ -63,7 +63,7 @@ It is worth acknowledging that this approach of enabling them only on the hub VN
 
 ### Summary
 
-I would recommend this approach only if you want a very light weight deployment, where you log for example traffic on centralised firewall/NVA NICs to get a low resolution view of your topology, where most data has to be aggregated based on source and destination IP data only. Also be aware that this approach, if not using a centralised firewall, and relying only on centralised gateways instead, will result in only see half (the inbound path) of ExpressRoute traffic flows.
+I would recommend this approach only if you want a very light weight deployment, where you log for example traffic on centralised firewall/NVA NICs to get a low resolution view of your topology, where most data has to be aggregated based on source and destination IP data only. Also be aware that this approach, if not using a centralised firewall, and relying only on centralised gateways instead, will result in only seeing half (the inbound path) of ExpressRoute traffic flows. (Most traffic going from Azure to On-premises via ER bypasses the GW on outbound path).
 
 # Enabling Flow Logs on Hub + Spokes
 
@@ -72,7 +72,7 @@ So we have demonstrated some negatives with hub-only enablement, so lets take a 
 - More cost (more data generated), more data stored per GB in Storage Accounts, more data process by Traffic Analytics. **Solution: Increased focus on retention timeline of data**
 - More worry about using single storage account and overwhelming any limits with 100's VNets logging to same destination. **Solution: Plan to assess Storage Account limits or use multiple Storage Accounts if running very large environment with 100s VNets and 1000s nodes**
 - Duplication of Data Logging polluting query outputs (E.g. if you Log Purple Hub and Red Spoke, and you have a flow going through VMs in both, or a GW + VM, and you query your entire VNet Flows Logs repository, you will get double the data for that flow). **Solution: I will demonstrate below how to scope your query to only the spoke Flow Log Resource IDs**
-- Complexity of operations, need to automate enablement of VNet Flow Logs at spoke level. **Solution: Easy to enable for all VNets in a region, use Azure Policy in pipeline for new VNets8*
+- Complexity of operations, need to automate enablement of VNet Flow Logs at spoke level. **Solution: Easy to enable for all VNets in a region during initial setup, use Azure Policy in pipeline for new VNets/BAU deployment**
 
 ![](images/2024-05-22-16-25-26.png)
 
@@ -86,7 +86,7 @@ NTANetAnalytics
 ```
 ![](images/2024-05-22-16-37-38.png)
 
-Notice the change in the above output, the DestIP within my spoke (10.242.10.4) effectively is now richer in its data. I am able to pull out the DestVM name, along with any other field schema I wish to use.
+Notice the change in the above output, the DestIP within my spoke (10.242.10.4) effectively is now richer in its data. I am able to pull out the DestVM name, along with any other field I wish to use.
 
 This is a reflection on the fact we have enabled VNet Flow Logs on al VNets, and the fact the entire system (SDN<>Flow Logs<>Traffic Analytics) now has the ability to stitch everything together with the right level of visibility.
 
@@ -123,7 +123,7 @@ NTANetAnalytics
 ```
 ![](images/2024-05-22-16-53-04.png)
 
-In the first query above, I am filtering out any Flow Log data that came from my Hub-VNet, ```where FlowLogResourceId !=``` this results in only pulling out data from the Spoke nodes, to get true data throughput figures. Notice how the throughput figures are higher in the bottom output.
+In the first query above, I am filtering out any Flow Log data that came from my Hub-VNet, ```where FlowLogResourceId !=``` this results in only pulling out data from the Spoke nodes, to get true data throughput figures. Notice how the throughput figures are higher in the second query.
 
 
 ### Virtual WAN
@@ -132,7 +132,6 @@ It is worth acknowledging that this approach is the required approach if using V
 
 ### Summary--update
 
-_I would recommend this approach only if you want a very light weight deployment, where you log for example traffic on centralised firewall/NVA NICs to get a low resolution view of your topology, where most data has to be aggregated based on source and destination IP data only. Also be aware that this approach, if not using a centralised firewall, and relying only on centralised gateways instead, will result in only see half (the inbound path) of ExpressRoute traffic flows._
+I would recommend this approach for all customers adopting VNet Flow Logs to get the full benefit of the feaure and associated new schema. It may require you to reduce the retention duration of your data if you have a large environment, but I would much prefer to have 7 days of useful data, as opposed to 1 year of useless data.
 
--
 
