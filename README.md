@@ -39,7 +39,7 @@ NTANetAnalytics
 
 Notice how in the above output, the DestIP within my spoke (10.242.13.4) effectively is an unknown IP address, in the same category as 192.168.2.1 (On-Premises client). Whereas the VM within my Hub VNet (10.10.3.7) has much richer data, specifically I am able to pull our attributes such as DestVM name.
 
-This is a reflection on the fact we have enabled VNet Flow Logs only within the Hub VNet. Therefore, we are able to pull flows out of the VNet itself, but unless the source or destination is within this VNet, we effectively lose the SDN schema.
+This is a reflection on the fact we have enabled VNet Flow Logs only within the Hub VNet. Therefore, we are able to pull flows out of the VNet itself, but unless the source or destination is within this VNet, we effectively lose the richer field data.
 
 ### IntraVNet
 
@@ -88,7 +88,7 @@ NTANetAnalytics
 
 Notice the change in the above output, the DestIP within my spoke (10.242.10.4) effectively is now richer in its data. I am able to pull out the DestVM name, along with any other field I wish to use.
 
-This is a reflection on the fact we have enabled VNet Flow Logs on al VNets, and the fact the entire system (SDN<>Flow Logs<>Traffic Analytics) now has the ability to stitch everything together with the right level of visibility.
+This is a reflection on the fact we have enabled VNet Flow Logs on al VNets, and the fact the entire system (VNet<>Flow Logs<>Traffic Analytics) now has the ability to stitch everything together with the right level of visibility.
 
 ### Per VNet usage
 ```
@@ -99,7 +99,7 @@ NTANetAnalytics
 ```
 ![](images/2024-05-22-16-40-54.png)
 
-These types of queries are where the real power of "Flow logs everywhere" shines. Because I have Flow Log coverage of each Spoke VNet, I am able to pull out the SDN data for each flow, I.e. the flow is not just a random "detached" source or destination IP address. So in the query above, I am using the "DestSubnet" field to summarize based on a per VNet level.
+These types of queries are where the real power of "Flow logs everywhere" shines. Because I have Flow Log coverage of each Spoke VNet, I am able to pull out the VNet data for each flow, I.e. the flow is not just a random "detached" source or destination IP address. So in the query above, I am using the "DestSubnet" field to summarize based on a per VNet level.
 
 > NB. The traffic analytics table NTANetAnalytics does not expose a field for "VNet" directly, therefore we are using a split based extend to pull-out the VNet field, from the Subnet data, which includes VNet along with resource group.
 
