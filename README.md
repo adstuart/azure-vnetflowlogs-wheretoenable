@@ -132,6 +132,6 @@ It is worth acknowledging that this approach is the required approach if using V
 
 ### Summary--update
 
-I would recommend this approach for all customers adopting VNet Flow Logs to get the full benefit of the feaure and associated new schema. It may require you to reduce the retention duration of your data if you have a large environment, but I would much prefer to have 7 days of useful data, as opposed to 1 year of useless data.
+I would recommend this approach for all customers adopting VNet Flow Logs to get the full benefit of the feature and associated new schema. It may require you to reduce the retention duration of your data if you have a large environment, but I would much prefer to have 7 days of useful data, as opposed to 1 year of useless data.
 
 
