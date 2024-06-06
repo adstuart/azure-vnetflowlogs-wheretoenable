@@ -27,6 +27,8 @@ You may start to wonder, with a Hub/Spoke topology, where all flows are funneled
 - No duplication of Data Logging polluting query outputs (E.g. if you Log Purple Hub and Red Spoke, and you have a flow going through VMs in both, or a GW + VM, and you query your entire VNet Flows Logs repository, you will get double the data for that flow)
 - Simplification of operations, no need to automate enablement of VNet Flow Logs at spoke level, just have central IT team do it on Hub and forget
 
+
+
 ## Example Data
 
 ### DestVM
@@ -64,6 +66,8 @@ It is worth acknowledging that this approach of enabling them only on the hub VN
 ### Summary
 
 I would recommend this approach only if you want a very light weight deployment, where you log for example traffic on centralised firewall/NVA NICs to get a low resolution view of your topology, where most data has to be aggregated based on source and destination IP data only. Also be aware that this approach, if not using a centralised firewall, and relying only on centralised gateways instead, will result in only seeing half (the inbound path) of ExpressRoute traffic flows. (Most traffic going from Azure to On-premises via ER bypasses the GW on outbound path).
+
+> NB :warning: The behaviour described in this section occurs only when the Spoke VNets are inside of a separate Azure subscriptions to that of the Hub VNet (which is the case for most customer topologies). If your spokes VNets are in the same subscription as your Hub VNet (rare), then then the richer data will be available from constructs in Spokes such as VNet/Subnet name and VM name. _I.e. the scope of Traffic Log enrichment for logs is as at the boundary of subscription._
 
 # Enabling Flow Logs on Hub + Spokes
 
